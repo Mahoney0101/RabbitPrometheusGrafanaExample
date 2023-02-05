@@ -1,0 +1,92 @@
+version: '3'
+services:
+  rabbitmq:
+    image: rabbitmq:management
+    container_name: rabbitmq
+    environment:
+      - RABBITMQ_NODENAME=rabbitmq@rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+      - "15692:15692"
+      - "5552:5552"
+      - "5671:5671"
+    networks:
+      network:
+        ipv4_address: 10.5.0.5
+    restart: unless-stopped
+      
+  prometheus:
+    image: prom/prometheus
+    container_name: prometheus
+    # networks:
+    #   - network
+    volumes:
+      - ./prometheus/prometheus.yml:/etc/prometheus/prometheus.yml
+      - ./prometheus:/prometheus
+    ports:
+      - 9090:9090
+      
+  grafana:
+    image: grafana/grafana
+    ports:
+      - 3000:3000
+    # networks:
+    #   - network
+    restart: unless-stopped
+    volumes:
+      - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
+      - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
+      - ./grafana/provisioning/dashboards:/var/lib/grafana/dashboards
+      - ./grafana-data:/var/lib/grafana
+
+  consumer:
+    build: ./subscriber
+    image: subscriber
+    ports:
+      - "8080:80"
+    links: 
+      - rabbitmq
+    networks:
+      - network
+    depends_on: 
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+    volumes:
+      - C:\Users\hoooc\Desktop\subscriberlogs:/app/logs
+
+  publisher:
+    build: ./publisher
+    image: publisher
+    links: 
+      - rabbitmq
+    networks:
+      - network
+    depends_on: 
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+
+  streampublisher:
+    build: ./streampublisher
+    image: streampublisher
+    links: 
+      - rabbitmq
+    environment:
+      - hostip=10.5.0.5
+    networks:
+      - network
+    depends_on: 
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+
+networks:
+  network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 10.5.0.0/16
+          gateway: 10.5.0.1
+
