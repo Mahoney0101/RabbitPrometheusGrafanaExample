@@ -83,6 +83,20 @@ services:
         condition: service_started
     restart: unless-stopped
 
+  streamsubscriber:
+    build: ./streamsubscriber
+    image: streamsubscriber
+    links: 
+      - rabbitmq
+    environment:
+      - hostip=10.5.0.5
+    networks:
+      - network
+    depends_on: 
+      rabbitmq:
+        condition: service_started
+    restart: unless-stopped
+
 networks:
   network:
     driver: bridge
