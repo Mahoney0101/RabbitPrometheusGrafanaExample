@@ -89,38 +89,16 @@ namespace Publisher;
                     }
                 });
         // Publish the messages
-        for (var i = 0; i < 10000; i++)
+        while (true)
         {
-            var message = new Message(Encoding.UTF8.GetBytes($"hello {i}"));
+            var message = new Message(Encoding.UTF8.GetBytes($"hello"));
             await producer.Send(message);
+            Thread.Sleep(100);
         }
-
-            // Create a consumer
-            var consumer = await Consumer.Create(
-                new ConsumerConfig(system, stream)
-                {
-                    Reference = "my_consumer",
-                    // Consume the stream from the beginning 
-                    // See also other OffsetSpec 
-                    OffsetSpec = new OffsetTypeOffset(15),
-                    // Receive the messages
-                    MessageHandler = async (sourceStream, consumer, ctx, message) =>
-                    {
-                        if (ctx.Offset % 2 == 0)
-                            return;
-
-                        Console.WriteLine(
-                            $"message: coming from {sourceStream} data: {Encoding.Default.GetString(message.Data.Contents.ToArray())} - consumed");
-
-                        await Task.CompletedTask;
-                    }
-                });
-
         }
         catch (Exception e)
         {
             Console.WriteLine(e.Message);
         }
-
       }
 }

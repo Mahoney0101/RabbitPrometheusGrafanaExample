@@ -3,22 +3,22 @@ var _builder = WebApplication.CreateBuilder(args);
 ConfigurationManager c_configuration = _builder.Configuration;
 var _appSettings = c_configuration.Get<AppSettings>(options => options.BindNonPublicProperties = true)!;
 
-_builder.Logging.ClearProviders();
-var _logger = new LoggerConfiguration()
-    .ReadFrom.Configuration(_builder.Configuration)
-    .CreateLogger();
+// _builder.Logging.ClearProviders();
+// var _logger = new LoggerConfiguration()
+//     .ReadFrom.Configuration(_builder.Configuration)
+//     .CreateLogger();
 
 try
 {
-    _logger.Information("About to start the application");
+    // _logger.Information("About to start the application");
 
-    _builder.Host.UseSerilog((ctx, lc) => lc
-        .MinimumLevel.Information()
-        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
-        .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
-        .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
-        .Filter.ByExcluding(Matching.WithProperty("RequestPath", "/healthz"))
-        .ReadFrom.Configuration(_builder.Configuration));
+    // _builder.Host.UseSerilog((ctx, lc) => lc
+    //     .MinimumLevel.Information()
+    //     .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+    //     .MinimumLevel.Override("Microsoft.Hosting.Lifetime", LogEventLevel.Information)
+    //     .MinimumLevel.Override("Microsoft.AspNetCore", LogEventLevel.Warning)
+    //     .Filter.ByExcluding(Matching.WithProperty("RequestPath", "/healthz"))
+    //     .ReadFrom.Configuration(_builder.Configuration));
 
     _builder.Services.AddSingleton<IAppSettings>(_appSettings)
         .AddSingleton<Rabbit>();
@@ -42,6 +42,7 @@ try
 }
 catch (Exception ex)
 {
-    Log.Error(ex.ToString());
+    Console.WriteLine(ex.ToString());
+//    Log.Error(ex.ToString());
 }
 

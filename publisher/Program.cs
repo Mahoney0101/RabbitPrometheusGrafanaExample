@@ -20,15 +20,17 @@ namespace Publisher;
     var properties = model.CreateBasicProperties();
     properties.Persistent = false;
     // Create Exchange
-    model.ExchangeDeclare("myexchange", ExchangeType.Fanout);
-    // Console.WriteLine("Creating Exchange");
-
+    //model.ExchangeDeclare("myexchange", ExchangeType.Fanout);
+    //Console.WriteLine("Creating Exchange");
         // Create Queue
     model.QueueDeclare("myque", false, false, false, null);
+    Console.WriteLine("Creating Que");
 
     byte[] messagebuffer = Encoding.Default.GetBytes("Message Published");
     while(true){
-        model.BasicPublish(exchange: "myexchange", routingKey:"myque", basicProperties: null, body: messagebuffer);
+        Console.WriteLine("Publishing");
+
+        model.BasicPublish(exchange: "", routingKey:"myque", basicProperties: null, body: messagebuffer);
         Thread.Sleep(50);
     }
     }
