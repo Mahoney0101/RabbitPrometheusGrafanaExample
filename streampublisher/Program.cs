@@ -93,7 +93,7 @@ namespace Publisher;
         {
             var message = new Message(Encoding.UTF8.GetBytes($"hello"));
             await producer.Send(message);
-            Thread.Sleep(100);
+            Thread.Sleep(10);
         }
         }
         catch (Exception e)
