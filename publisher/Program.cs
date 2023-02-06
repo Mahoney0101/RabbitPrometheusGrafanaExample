@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Client;
+﻿using Prometheus;
+using RabbitMQ.Client;
 using System;
 using System.Text;
 using System.Threading;
@@ -9,6 +10,8 @@ namespace Publisher;
   {
     static void Main(string[] args)
     {
+    using var server = new Prometheus.MetricServer(port: 1234);
+    server.Start();
     var connectionFactory = new RabbitMQ.Client.ConnectionFactory()
     {
     UserName = "guest",
@@ -31,7 +34,7 @@ namespace Publisher;
         Console.WriteLine("Publishing");
 
         model.BasicPublish(exchange: "", routingKey:"myque", basicProperties: null, body: messagebuffer);
-        Thread.Sleep(50);
+        Thread.Sleep(100);
     }
     }
   }

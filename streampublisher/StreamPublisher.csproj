@@ -11,6 +11,7 @@
     <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="7.0.0" />
     <PackageReference Include="Microsoft.Extensions.Hosting" Version="7.0.0" />
+    <PackageReference Include="prometheus-net" Version="7.0.0" />
     <PackageReference Include="RabbitMQ.Stream.Client" Version="1.1.1" />
   </ItemGroup>
 

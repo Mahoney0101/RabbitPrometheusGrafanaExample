@@ -1,4 +1,5 @@
-﻿using RabbitMQ.Stream.Client;
+﻿using Prometheus;
+using RabbitMQ.Stream.Client;
 using RabbitMQ.Stream.Client.Reliable;
 using System;
 using System.Buffers;
@@ -13,7 +14,8 @@ namespace Publisher;
     static async Task Main(string[] args)
     {
                 //var addresses = Dns.GetHostAddresses(hostname);
-
+        using var server = new Prometheus.MetricServer(port: 1235);
+        server.Start();
         var config = new StreamSystemConfig
                 {
                     UserName = "guest",
@@ -93,7 +95,7 @@ namespace Publisher;
         {
             var message = new Message(Encoding.UTF8.GetBytes($"hello"));
             await producer.Send(message);
-            Thread.Sleep(10);
+            Thread.Sleep(100);
         }
         }
         catch (Exception e)
