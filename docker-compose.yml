@@ -15,7 +15,7 @@ services:
     networks:
       network:
         ipv4_address: 10.5.0.5
-    restart: unless-stopped
+    restart: always
       
   prometheus:
     image: prom/prometheus
@@ -34,7 +34,7 @@ services:
       - 3000:3000
     networks:
       - network
-    restart: unless-stopped
+    restart: always
     volumes:
       - ./grafana/provisioning/datasources:/etc/grafana/provisioning/datasources
       - ./grafana/dashboard.yaml:/etc/grafana/provisioning/dashboards/main.yaml
@@ -53,7 +53,7 @@ services:
     depends_on: 
       rabbitmq:
         condition: service_started
-    restart: unless-stopped
+    restart: always
     volumes:
       - C:\Users\hoooc\Desktop\subscriberlogs:/app/logs
 
@@ -69,7 +69,7 @@ services:
     depends_on: 
       rabbitmq:
         condition: service_started
-    restart: unless-stopped
+    restart: always
 
   streampublisher:
     build: ./streampublisher
@@ -85,7 +85,7 @@ services:
     depends_on: 
       rabbitmq:
         condition: service_started
-    restart: unless-stopped
+    restart: always
 
   streamsubscriber:
     build: ./streamsubscriber
@@ -94,20 +94,14 @@ services:
       - rabbitmq
     environment:
       - hostip=10.5.0.5
+    ports:
+      - "1111:1111"
     networks:
       - network
     depends_on: 
       rabbitmq:
         condition: service_started
-    restart: unless-stopped
-    # deploy:
-    #   resources:
-    #     limits:
-    #       cpus: '0.25'
-    #       memory: 50M
-    #     reservations:
-    #       cpus: '0.25'
-    #       memory: 20M
+    restart: always
 
 networks:
   network:

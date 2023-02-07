@@ -1,0 +1,47 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: prometheus
+  name: prometheus
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: prometheus
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mastersinvestigation-network: "true"
+        io.kompose.service: prometheus
+    spec:
+      containers:
+        - image: prom/prometheus
+          name: prometheus
+          ports:
+            - containerPort: 9090
+          resources: {}
+          volumeMounts:
+            - mountPath: /etc/prometheus/prometheus.yml
+              name: prometheus-hostpath0
+            - mountPath: /prometheus
+              name: prometheus-hostpath1
+      restartPolicy: Always
+      volumes:
+        - hostPath:
+            path: /mnt/c/Users/hoooc/source/repos/MastersInvestigation/prometheus/prometheus.yml
+          name: prometheus-hostpath0
+        - hostPath:
+            path: /mnt/c/Users/hoooc/source/repos/MastersInvestigation/prometheus
+          name: prometheus-hostpath1
+status: {}

@@ -1,0 +1,37 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  annotations:
+    kompose.cmd: kompose convert --volumes hostPath
+    kompose.version: 1.28.0 (c4137012e)
+  creationTimestamp: null
+  labels:
+    io.kompose.service: streamsubscriber
+  name: streamsubscriber
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      io.kompose.service: streamsubscriber
+  strategy: {}
+  template:
+    metadata:
+      annotations:
+        kompose.cmd: kompose convert --volumes hostPath
+        kompose.version: 1.28.0 (c4137012e)
+      creationTimestamp: null
+      labels:
+        io.kompose.network/mastersinvestigation-network: "true"
+        io.kompose.service: streamsubscriber
+    spec:
+      containers:
+        - env:
+            - name: hostip
+              value: 10.5.0.5
+          image: streamsubscriber
+          name: streamsubscriber
+          ports:
+            - containerPort: 1111
+          resources: {}
+      restartPolicy: Always
+status: {}
