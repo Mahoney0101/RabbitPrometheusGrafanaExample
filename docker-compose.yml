@@ -54,8 +54,6 @@ services:
       rabbitmq:
         condition: service_started
     restart: always
-    volumes:
-      - C:\Users\hoooc\Desktop\subscriberlogs:/app/logs
 
   publisher:
     build: ./publisher
